@@ -8,9 +8,10 @@ type FileCollection struct {
 	files map[string]File
 }
 
-func (f *FileCollection) AddFile(relativePath string, template *template2.Template, templateData map[string]interface{}) {
+func (f *FileCollection) AddFile(relativePath string, skipIfExists bool, template *template2.Template, templateData interface{}) {
 	file := File{
 		RelativePath: relativePath,
+		SkipIfExists: skipIfExists,
 		Template:     template,
 		TemplateData: templateData,
 	}

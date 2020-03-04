@@ -1,18 +1,26 @@
 file_version: 1
+models:
+  -
+    name: User
+    fields:
+      id:
+        type: UUID
+      username:
+        type: string
 generators:
   -
-    type: rest_api
+    type: go_gin_rest_api
+    relative_path: my_gin_rest_api
     options:
-      language: go
-      entity:
-        name: User
-        fields:
-          id:
-            type: UUID
-          username:
-            type: string
       actions:
         - READ
         - CREATE
         - UPDATE
         - DELETE
+  -
+    type: common_files
+    relative_path: my_gin_rest_api
+    options:
+      name: my-gin-rest-api
+      friendly_name: My Gin REST API
+      description: This is an example of a gin REST API!

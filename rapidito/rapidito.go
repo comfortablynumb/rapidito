@@ -15,15 +15,16 @@ import (
 
 // Rapidito This is the rapidito instance.
 type Rapidito struct {
-	ErrorHandler *errorhandler.ErrorHandler
-	FileHelper   *helper.FileHelper
-	Logger       *logger.Logger
-	Generators   map[string]generator.Generator
+	ErrorHandler   *errorhandler.ErrorHandler
+	FileHelper     *helper.FileHelper
+	TemplateHelper *helper.TemplateHelper
+	Logger         *logger.Logger
+	Generators     map[string]generator.Generator
 }
 
 func (r *Rapidito) Generate(configFile string) error {
 	config := r.parseConfig(configFile)
-	generatorHelper := generator.NewGeneratorHelper(r.ErrorHandler, r.FileHelper, r.Logger)
+	generatorHelper := generator.NewGeneratorHelper(r.ErrorHandler, r.FileHelper, r.TemplateHelper, r.Logger)
 
 	for _, generatorConfig := range config.Generators {
 		r.runGenerator(config, generatorConfig, generatorHelper)
@@ -80,11 +81,19 @@ func (r *Rapidito) runGenerator(globalConfig *configuration.Config, generatorCon
 
 	r.FileHelper.MkDirAll(finalPath, 0755)
 
+	r.Logger.Info("Generating files for '%s' on directory: %s", gen.GetName(), finalPath)
+
 	for _, file := range fileCollection.GetFiles() {
 		path := filepath.Clean(fmt.Sprintf("%s/%s", finalPath, file.RelativePath))
 		dir := filepath.Dir(path)
 
 		r.FileHelper.MkDirAll(dir, 0755)
+
+		if file.SkipIfExists && r.FileHelper.FileExists(path) {
+			r.Logger.Info("File '%s' already exists and its 'skip if exists' option is true. Skipping...", path)
+
+			continue
+		}
 
 		f, err := os.Create(path)
 
@@ -110,9 +119,10 @@ func NewRapidito() *Rapidito {
 	errorHandler := errorhandler.NewErrorHandler(log)
 
 	return &Rapidito{
-		ErrorHandler: errorHandler,
-		FileHelper:   helper.NewFileHelper(errorHandler),
-		Logger:       log,
-		Generators:   make(map[string]generator.Generator),
+		ErrorHandler:   errorHandler,
+		FileHelper:     helper.NewFileHelper(errorHandler),
+		TemplateHelper: helper.NewTemplateHelper(errorHandler),
+		Logger:         log,
+		Generators:     make(map[string]generator.Generator),
 	}
 }

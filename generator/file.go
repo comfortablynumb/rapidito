@@ -6,6 +6,7 @@ import "text/template"
 
 type File struct {
 	RelativePath string
+	SkipIfExists bool
 	Template     *template.Template
-	TemplateData map[string]interface{}
+	TemplateData interface{}
 }

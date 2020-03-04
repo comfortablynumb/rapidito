@@ -38,6 +38,14 @@ func (f *FileHelper) MkDirAll(path string, perm os.FileMode) {
 	f.ErrorHandler.HandleIfError(err, "Could NOT create missing directories in path: %s", path)
 }
 
+func (f *FileHelper) FileExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}
+
 func NewFileHelper(errorHandler *errorhandler.ErrorHandler) *FileHelper {
 	return &FileHelper{
 		ErrorHandler: errorHandler,

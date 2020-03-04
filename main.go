@@ -5,7 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/comfortablynumb/rapidito/generator/types/rest"
+	"github.com/comfortablynumb/rapidito/generator/types/commonfiles"
+	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi"
 	rapidito2 "github.com/comfortablynumb/rapidito/rapidito"
 	"github.com/urfave/cli/v2"
 )
@@ -13,7 +14,8 @@ import (
 func main() {
 	rapidito := rapidito2.NewRapidito()
 
-	rapidito.RegisterGenerator(rest.NewRestApiGenerator())
+	rapidito.RegisterGenerator(goginrestapi.NewGoGinRestApiGenerator())
+	rapidito.RegisterGenerator(commonfiles.NewCommonFilesGenerator())
 
 	executable, err := os.Executable()
 
@@ -41,7 +43,5 @@ func main() {
 
 	err = app.Run(os.Args)
 
-	if err != nil {
-		rapidito.HandleError(err, "Error!")
-	}
+	rapidito.HandleIfError(err, "There was an error while executing Rapidito!")
 }
