@@ -1,0 +1,18 @@
+file_version: 1
+generators:
+  -
+    type: rest_api
+    options:
+      language: go
+      entity:
+        name: User
+        fields:
+          id:
+            type: UUID
+          username:
+            type: string
+      actions:
+        - READ
+        - CREATE
+        - UPDATE
+        - DELETE
