@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/comfortablynumb/rapidito/generator/types/commonfiles"
 	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi"
 	rapidito2 "github.com/comfortablynumb/rapidito/rapidito"
 	"github.com/urfave/cli/v2"
@@ -15,7 +14,6 @@ func main() {
 	rapidito := rapidito2.NewRapidito()
 
 	rapidito.RegisterGenerator(goginrestapi.NewGoGinRestApiGenerator())
-	rapidito.RegisterGenerator(commonfiles.NewCommonFilesGenerator())
 
 	executable, err := os.Executable()
 

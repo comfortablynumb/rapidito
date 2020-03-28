@@ -12,15 +12,13 @@ generators:
     type: go_gin_rest_api
     relative_path: my_gin_rest_api
     options:
+      name: my-gin-rest-api
+      friendly_name: My Gin REST API
+      description: This is an example of a gin REST API!
+      package:
+        name: 'github.com/comfortablynumb/goginrestapi'
       actions:
         - READ
         - CREATE
         - UPDATE
         - DELETE
-  -
-    type: common_files
-    relative_path: my_gin_rest_api
-    options:
-      name: my-gin-rest-api
-      friendly_name: My Gin REST API
-      description: This is an example of a gin REST API!

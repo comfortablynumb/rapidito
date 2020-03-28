@@ -25,9 +25,25 @@ type Rapidito struct {
 func (r *Rapidito) Generate(configFile string) error {
 	config := r.parseConfig(configFile)
 	generatorHelper := generator.NewGeneratorHelper(r.ErrorHandler, r.FileHelper, r.TemplateHelper, r.Logger)
+	executedGenerators := make([]*generator.ExecutedGenerator, 0)
+	completeFileCollection := generator.NewFileCollection()
+
+	// Run each generator
 
 	for _, generatorConfig := range config.Generators {
-		r.runGenerator(config, generatorConfig, generatorHelper)
+		executedGenerator := r.runGenerator(config, generatorConfig, generatorHelper)
+
+		completeFileCollection.AddFromCollection(executedGenerator.FileCollection)
+
+		executedGenerators = append(executedGenerators, executedGenerator)
+	}
+
+	// Now, execute the PostGeneration method on each generator
+
+	for _, executedGenerator := range executedGenerators {
+		err := executedGenerator.Generator.PostGeneration(completeFileCollection, executedGenerator.GeneratorContext, generatorHelper)
+
+		r.ErrorHandler.HandleIfError(err, "An error occurred while execution the 'PostGeneration' method on generator: %s", executedGenerator.Generator.GetName())
 	}
 
 	return nil
@@ -61,7 +77,11 @@ func (r *Rapidito) parseConfig(configFile string) *configuration.Config {
 	return config
 }
 
-func (r *Rapidito) runGenerator(globalConfig *configuration.Config, generatorConfig configuration.GeneratorConfig, generatorHelper *generator.GeneratorHelper) {
+func (r *Rapidito) runGenerator(
+	globalConfig *configuration.Config,
+	generatorConfig configuration.GeneratorConfig,
+	generatorHelper *generator.GeneratorHelper,
+) *generator.ExecutedGenerator {
 	gen, found := r.Generators[generatorConfig.Type]
 
 	if !found {
@@ -104,6 +124,7 @@ func (r *Rapidito) runGenerator(globalConfig *configuration.Config, generatorCon
 		r.HandleIfError(err, "Could not generate file: %s", path)
 	}
 
+	return generator.NewExecutedGenerator(gen, fileCollection, generatorContext)
 }
 
 func (r *Rapidito) HandleError(err error, msg string, args ...interface{}) {

@@ -8,6 +8,12 @@ type FileCollection struct {
 	files map[string]File
 }
 
+func (f *FileCollection) AddFromCollection(fileCollection *FileCollection) {
+	for _, file := range fileCollection.GetFiles() {
+		f.AddFile(file.RelativePath, file.SkipIfExists, file.Template, file.TemplateData)
+	}
+}
+
 func (f *FileCollection) AddFile(relativePath string, skipIfExists bool, template *template2.Template, templateData interface{}) {
 	file := File{
 		RelativePath: relativePath,
