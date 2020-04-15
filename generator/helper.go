@@ -27,6 +27,18 @@ func (r *GeneratorHelper) HandleIfError(err error, msg string, args ...interface
 	r.ErrorHandler.HandleIfError(err, msg, args...)
 }
 
+func (r *GeneratorHelper) LogDebug(msg string, args ...interface{}) {
+	r.Logger.Debug(msg, args...)
+}
+
+func (r *GeneratorHelper) LogInfo(msg string, args ...interface{}) {
+	r.Logger.Info(msg, args...)
+}
+
+func (r *GeneratorHelper) LogError(err error, msg string, args ...interface{}) {
+	r.Logger.Error(err, msg, args...)
+}
+
 func NewGeneratorHelper(
 	errorHandler *errorhandler.ErrorHandler,
 	fileHelper *helper.FileHelper,

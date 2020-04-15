@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"github.com/comfortablynumb/rapidito/configuration"
 	"github.com/comfortablynumb/rapidito/errorhandler"
 	"github.com/mitchellh/mapstructure"
 )
@@ -9,6 +10,7 @@ import (
 
 type GeneratorContext struct {
 	ErrorHandler *errorhandler.ErrorHandler
+	GlobalConfig configuration.Config
 	Options      map[string]interface{}
 }
 
@@ -22,9 +24,14 @@ func (g *GeneratorContext) PopulateOptions(options interface{}) {
 
 // Static functions
 
-func NewGeneratorContext(errorHandler *errorhandler.ErrorHandler, options map[string]interface{}) *GeneratorContext {
+func NewGeneratorContext(
+	errorHandler *errorhandler.ErrorHandler,
+	globalConfig configuration.Config,
+	options map[string]interface{},
+) *GeneratorContext {
 	return &GeneratorContext{
 		ErrorHandler: errorHandler,
+		GlobalConfig: globalConfig,
 		Options:      options,
 	}
 }

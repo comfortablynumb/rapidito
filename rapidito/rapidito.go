@@ -31,7 +31,7 @@ func (r *Rapidito) Generate(configFile string) error {
 	// Run each generator
 
 	for _, generatorConfig := range config.Generators {
-		executedGenerator := r.runGenerator(config, generatorConfig, generatorHelper)
+		executedGenerator := r.runGenerator(*config, generatorConfig, generatorHelper)
 
 		completeFileCollection.AddFromCollection(executedGenerator.FileCollection)
 
@@ -78,7 +78,7 @@ func (r *Rapidito) parseConfig(configFile string) *configuration.Config {
 }
 
 func (r *Rapidito) runGenerator(
-	globalConfig *configuration.Config,
+	globalConfig configuration.Config,
 	generatorConfig configuration.GeneratorConfig,
 	generatorHelper *generator.GeneratorHelper,
 ) *generator.ExecutedGenerator {
@@ -88,7 +88,7 @@ func (r *Rapidito) runGenerator(
 		r.HandleError(errors.New("Unknown generator type"), "Generator type is invalid. Please check that the value '%s' is correct", generatorConfig.Type)
 	}
 
-	generatorContext := generator.NewGeneratorContext(r.ErrorHandler, generatorConfig.Options)
+	generatorContext := generator.NewGeneratorContext(r.ErrorHandler, globalConfig, generatorConfig.Options)
 	fileCollection := generator.NewFileCollection()
 
 	err := gen.Generate(fileCollection, generatorContext, generatorHelper)

@@ -1,8 +1,11 @@
 package goginrestapi
 
 import (
+	"fmt"
+
 	"github.com/comfortablynumb/rapidito/generator"
 	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi/templates"
+	"github.com/comfortablynumb/rapidito/language/golang"
 )
 
 const (
@@ -22,6 +25,7 @@ func (r *goGinRestApiGenerator) Generate(
 	context.PopulateOptions(options)
 
 	r.generateCommonFiles(fileCollection, options, helper)
+	r.generateApiModules(fileCollection, context, options, helper)
 
 	return nil
 }
@@ -104,6 +108,40 @@ func (r *goGinRestApiGenerator) generateCommonFiles(
 	// Package validation
 
 	fileCollection.AddFile("internal/validation/validationerror.go", false, helper.ParseTemplate(templates.ValidationValidationError), options)
+}
+
+func (r *goGinRestApiGenerator) generateApiModules(
+	fileCollection *generator.FileCollection,
+	context *generator.GeneratorContext,
+	options *GoGinRestApiOptions,
+	helper *generator.GeneratorHelper,
+) {
+	helper.LogInfo("Generating REST API modules...")
+
+	models := context.GlobalConfig.GetModels()
+
+	if len(models) < 1 {
+		helper.LogInfo("No models found on the configuration! No REST API modules to generate.")
+
+		return
+	}
+
+	helper.LogInfo("Found %d models. Generating REST API modules.", len(models))
+
+	for _, model := range models {
+		// Model
+
+		golangModel := golang.NewGolangModelFromModel(model)
+
+		fileCollection.AddFile(
+			fmt.Sprintf("internal/model/%s.go", golangModel.Filename),
+			false,
+			helper.ParseTemplate(templates.Model),
+			golangModel,
+		)
+
+		// Resources
+	}
 }
 
 func (r *goGinRestApiGenerator) GetName() string {

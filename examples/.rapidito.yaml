@@ -1,10 +1,9 @@
 file_version: 1
 models:
-  -
-    name: User
+  user:
     fields:
       id:
-        type: UUID
+        type: long
       username:
         type: string
 generators:
