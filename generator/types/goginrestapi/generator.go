@@ -2,10 +2,12 @@ package goginrestapi
 
 import (
 	"fmt"
+	helper2 "github.com/comfortablynumb/rapidito/helper"
 
 	"github.com/comfortablynumb/rapidito/generator"
 	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi/templates"
 	"github.com/comfortablynumb/rapidito/language/golang"
+	"go/format"
 )
 
 const (
@@ -46,68 +48,194 @@ func (r *goGinRestApiGenerator) generateCommonFiles(
 ) {
 	// :: Root files
 
-	fileCollection.AddFile("main.go", false, helper.ParseTemplate(templates.MainGo), options)
-	fileCollection.AddFile("go.mod", false, helper.ParseTemplate(templates.GoMod), options)
-	fileCollection.AddFile("go.sum", false, helper.ParseTemplate(templates.GoSum), options)
-	fileCollection.AddFile(".gitignore", false, helper.ParseTemplate(templates.GitIgnore), options)
+	fileCollection.AddFile(
+		"main.go",
+		false,
+		helper.ParseTemplate(templates.MainGo),
+		options,
+		formatGoCode,
+	)
+	fileCollection.AddFile(
+		"go.mod",
+		false,
+		helper.ParseTemplate(templates.GoMod),
+		options,
+		nil,
+	)
+	fileCollection.AddFile(
+		"go.sum",
+		false,
+		helper.ParseTemplate(templates.GoSum),
+		options,
+		nil,
+	)
+	fileCollection.AddFile(
+		".gitignore",
+		false,
+		helper.ParseTemplate(templates.GitIgnore),
+		options,
+		nil,
+	)
 
 	// :: Generic services / utilities
 
 	// Package app
 
-	fileCollection.AddFile("internal/app/app.go", false, helper.ParseTemplate(templates.AppApp), options)
+	fileCollection.AddFile(
+		"internal/app/app.go",
+		false,
+		helper.ParseTemplate(templates.AppApp),
+		options,
+		formatGoCode,
+	)
 
 	// Package apperror
 
-	fileCollection.AddFile("internal/apperror/apperror.go", false, helper.ParseTemplate(templates.AppErrorAppError), options)
-	fileCollection.AddFile("internal/apperror/common.go", false, helper.ParseTemplate(templates.AppErrorCommon), options)
-	fileCollection.AddFile("internal/apperror/constants.go", false, helper.ParseTemplate(templates.AppErrorConstants), options)
+	fileCollection.AddFile(
+		"internal/apperror/apperror.go",
+		false,
+		helper.ParseTemplate(templates.AppErrorAppError),
+		options,
+		formatGoCode,
+	)
+	fileCollection.AddFile(
+		"internal/apperror/common.go",
+		false,
+		helper.ParseTemplate(templates.AppErrorCommon),
+		options,
+		formatGoCode,
+	)
+	fileCollection.AddFile(
+		"internal/apperror/constants.go",
+		false,
+		helper.ParseTemplate(templates.AppErrorConstants),
+		options,
+		formatGoCode,
+	)
 
 	// Package componentregistry
 
-	fileCollection.AddFile("internal/componentregistry/componentregistry.go", false, helper.ParseTemplate(templates.ComponentRegistryComponentRegistry), options)
+	fileCollection.AddFile(
+		"internal/componentregistry/componentregistry.go",
+		false,
+		helper.ParseTemplate(templates.ComponentRegistryComponentRegistry),
+		options,
+		formatGoCode,
+	)
 
 	// Package config
 
-	fileCollection.AddFile("internal/config/config.go", false, helper.ParseTemplate(templates.ConfigConfig), options)
+	fileCollection.AddFile(
+		"internal/config/config.go",
+		false,
+		helper.ParseTemplate(templates.ConfigConfig),
+		options,
+		formatGoCode,
+	)
 
 	// Package context
 
-	fileCollection.AddFile("internal/context/requestcontext.go", false, helper.ParseTemplate(templates.ContextRequestContext), options)
-	fileCollection.AddFile("internal/context/requestcontextfactory.go", false, helper.ParseTemplate(templates.ContextRequestContextFactory), options)
+	fileCollection.AddFile(
+		"internal/context/requestcontext.go",
+		false,
+		helper.ParseTemplate(templates.ContextRequestContext),
+		options,
+		formatGoCode,
+	)
+	fileCollection.AddFile(
+		"internal/context/requestcontextfactory.go",
+		false,
+		helper.ParseTemplate(templates.ContextRequestContextFactory),
+		options,
+		formatGoCode,
+	)
 
 	// Package errorhandler
 
-	fileCollection.AddFile("internal/errorhandler/errorhandler.go", false, helper.ParseTemplate(templates.ErrorHandlerErrorHandler), options)
+	fileCollection.AddFile(
+		"internal/errorhandler/errorhandler.go",
+		false,
+		helper.ParseTemplate(templates.ErrorHandlerErrorHandler),
+		options,
+		formatGoCode,
+	)
 
 	// Package hooks
 
-	fileCollection.AddFile("internal/hooks/hooks.go", false, helper.ParseTemplate(templates.HooksHooks), options)
-	fileCollection.AddFile("internal/hooks/hooks_custom.go", false, helper.ParseTemplate(templates.HooksHooksCustom), options)
+	fileCollection.AddFile(
+		"internal/hooks/hooks.go",
+		false,
+		helper.ParseTemplate(templates.HooksHooks),
+		options,
+		formatGoCode,
+	)
+	fileCollection.AddFile(
+		"internal/hooks/hooks_custom.go",
+		false,
+		helper.ParseTemplate(templates.HooksHooksCustom),
+		options,
+		formatGoCode,
+	)
 
 	// Package middleware
 
-	fileCollection.AddFile("internal/middleware/errorhandler.go", false, helper.ParseTemplate(templates.MiddlewareErrorHandler), options)
+	fileCollection.AddFile(
+		"internal/middleware/errorhandler.go",
+		false,
+		helper.ParseTemplate(templates.MiddlewareErrorHandler),
+		options,
+		formatGoCode,
+	)
 
 	// Package mock
 
-	fileCollection.AddFile("internal/mock/app.go", false, helper.ParseTemplate(templates.MockApp), options)
+	fileCollection.AddFile(
+		"internal/mock/app.go",
+		false,
+		helper.ParseTemplate(templates.MockApp),
+		options,
+		formatGoCode,
+	)
 
 	// Package module
 
-	fileCollection.AddFile("internal/module/common.go", false, helper.ParseTemplate(templates.ModuleCommon), options)
+	fileCollection.AddFile(
+		"internal/module/common.go",
+		false,
+		helper.ParseTemplate(templates.ModuleCommon),
+		options,
+		formatGoCode,
+	)
 
 	// Package resource
 
-	fileCollection.AddFile("internal/resource/common.go", false, helper.ParseTemplate(templates.ResourceCommon), options)
+	fileCollection.AddFile(
+		"internal/resource/common.go",
+		false,
+		helper.ParseTemplate(templates.ResourceCommon),
+		options,
+		formatGoCode,
+	)
 
 	// Package service
 
-	fileCollection.AddFile("internal/service/time.go", false, helper.ParseTemplate(templates.ServiceTime), options)
+	fileCollection.AddFile(
+		"internal/service/time.go",
+		false,
+		helper.ParseTemplate(templates.ServiceTime),
+		options,
+		formatGoCode,
+	)
 
 	// Package validation
 
-	fileCollection.AddFile("internal/validation/validationerror.go", false, helper.ParseTemplate(templates.ValidationValidationError), options)
+	fileCollection.AddFile(
+		"internal/validation/validationerror.go",
+		false,
+		helper.ParseTemplate(templates.ValidationValidationError),
+		options,
+		formatGoCode,
+	)
 }
 
 func (r *goGinRestApiGenerator) generateApiModules(
@@ -138,9 +266,27 @@ func (r *goGinRestApiGenerator) generateApiModules(
 			false,
 			helper.ParseTemplate(templates.Model),
 			golangModel,
+			formatGoCode,
 		)
 
 		// Resources
+
+		golangResourceCollection := golang.NewGolangResourceCollectionFromGolangModel(golangModel)
+		golangResourceFile := golang.NewGolangResourceFile(golangResourceCollection)
+
+		templateData := helper2.TemplateData{
+			GlobalConfig:    context.GlobalConfig,
+			GeneratorConfig: options,
+			ExtraData:       golangResourceFile,
+		}
+
+		fileCollection.AddFile(
+			fmt.Sprintf("internal/resource/%s.go", golangResourceCollection.Filename),
+			false,
+			helper.ParseTemplate(templates.ResourceSpecific),
+			templateData,
+			formatGoCode,
+		)
 	}
 }
 
@@ -148,6 +294,18 @@ func (r *goGinRestApiGenerator) GetName() string {
 	return Type
 }
 
+// Static functions
+
 func NewGoGinRestApiGenerator() generator.Generator {
 	return &goGinRestApiGenerator{}
+}
+
+func formatGoCode(filename string, contents string) (string, error) {
+	contentBytes, err := format.Source([]byte(contents))
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(contentBytes), nil
 }

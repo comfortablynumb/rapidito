@@ -6,6 +6,9 @@ models:
         type: long
       username:
         type: string
+        searchable: true
+    primary_key:
+      - 'id'
 generators:
   -
     type: go_gin_rest_api

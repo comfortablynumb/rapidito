@@ -10,16 +10,23 @@ type FileCollection struct {
 
 func (f *FileCollection) AddFromCollection(fileCollection *FileCollection) {
 	for _, file := range fileCollection.GetFiles() {
-		f.AddFile(file.RelativePath, file.SkipIfExists, file.Template, file.TemplateData)
+		f.AddFile(file.RelativePath, file.SkipIfExists, file.Template, file.TemplateData, file.PreFileWriteFunc)
 	}
 }
 
-func (f *FileCollection) AddFile(relativePath string, skipIfExists bool, template *template2.Template, templateData interface{}) {
+func (f *FileCollection) AddFile(
+	relativePath string,
+	skipIfExists bool,
+	template *template2.Template,
+	templateData interface{},
+	preFileWriteFunc PreFileWriteFunc,
+) {
 	file := File{
-		RelativePath: relativePath,
-		SkipIfExists: skipIfExists,
-		Template:     template,
-		TemplateData: templateData,
+		RelativePath:     relativePath,
+		SkipIfExists:     skipIfExists,
+		Template:         template,
+		TemplateData:     templateData,
+		PreFileWriteFunc: preFileWriteFunc,
 	}
 
 	f.files[file.RelativePath] = file

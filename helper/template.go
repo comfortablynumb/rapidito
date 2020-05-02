@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"github.com/comfortablynumb/rapidito/configuration"
 	"text/template"
 
 	"github.com/comfortablynumb/rapidito/errorhandler"
@@ -18,6 +19,12 @@ func (t *TemplateHelper) ParseTemplate(tpl string) *template.Template {
 	t.errorHandler.HandleIfError(err, "An error occurred while parsing a template.")
 
 	return parsedTemplate
+}
+
+type TemplateData struct {
+	GlobalConfig    configuration.Config
+	GeneratorConfig interface{}
+	ExtraData       interface{}
 }
 
 // Static functions

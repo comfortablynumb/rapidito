@@ -1,6 +1,7 @@
 package rapidito
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -115,11 +116,25 @@ func (r *Rapidito) runGenerator(
 			continue
 		}
 
+		var buf bytes.Buffer
+
+		err = file.Template.Execute(&buf, file.TemplateData)
+
+		r.HandleIfError(err, "Could not execute template for path: %s", path)
+
+		contents := buf.String()
+
+		if file.PreFileWriteFunc != nil {
+			contents, err = file.PreFileWriteFunc(path, contents)
+
+			r.HandleIfError(err, "There was an error while executing a pre file write func for path: %s", path)
+		}
+
 		f, err := os.Create(path)
 
 		r.HandleIfError(err, "Could not create file: %s", path)
 
-		err = file.Template.Execute(f, file.TemplateData)
+		_, err = f.WriteString(contents)
 
 		r.HandleIfError(err, "Could not generate file: %s", path)
 	}

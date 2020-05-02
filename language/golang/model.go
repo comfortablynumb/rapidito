@@ -15,6 +15,7 @@ type GolangModel struct {
 	StructName  string
 	BuilderName string
 	Fields      map[string]GolangModelField
+	PrimaryKey  []string
 }
 
 type GolangModelField struct {
@@ -23,6 +24,20 @@ type GolangModelField struct {
 	BuilderFieldName string
 	Type             GolangType
 	CustomType       string
+	HideOnSearch     bool
+	HideOnCreate     bool
+	HideOnUpdate     bool
+	HideOnResponse   bool
+}
+
+func (m *GolangModel) GetField(name string) *GolangModelField {
+	field, found := m.Fields[name]
+
+	if !found {
+		return nil
+	}
+
+	return &field
 }
 
 // Static functions
@@ -34,6 +49,7 @@ func NewGolangModelFromModel(m model.Model) GolangModel {
 		BuilderName: fmt.Sprintf("%sBuilder", strcase.UpperCamelCase(m.Name)),
 		Filename:    strcase.SnakeCase(m.Name),
 		Fields:      make(map[string]GolangModelField),
+		PrimaryKey:  m.PrimaryKey,
 	}
 
 	for _, field := range m.GetFields() {
@@ -42,6 +58,10 @@ func NewGolangModelFromModel(m model.Model) GolangModel {
 			StructFieldName:  strcase.UpperCamelCase(field.Name),
 			BuilderFieldName: strcase.LowerCamelCase(field.Name),
 			Type:             GetTypeFromModelType(field.Type),
+			HideOnSearch:     field.HideOnSearch,
+			HideOnCreate:     field.HideOnCreate,
+			HideOnUpdate:     field.HideOnUpdate,
+			HideOnResponse:   field.HideOnResponse,
 		}
 	}
 
