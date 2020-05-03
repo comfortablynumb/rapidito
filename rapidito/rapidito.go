@@ -13,6 +13,7 @@ import (
 	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi"
 	"github.com/comfortablynumb/rapidito/helper"
 	"github.com/comfortablynumb/rapidito/language/golang"
+	"github.com/comfortablynumb/rapidito/language/sql"
 	"github.com/comfortablynumb/rapidito/logger"
 )
 
@@ -24,6 +25,7 @@ type Rapidito struct {
 	Logger         *logger.Logger
 	Generators     map[string]generator.Generator
 	GolangManager  *golang.GolangManager
+	SqlManager     *sql.SqlManager
 }
 
 func (r *Rapidito) Generate(configFile string) error {
@@ -154,13 +156,14 @@ func (r *Rapidito) HandleIfError(err error, msg string, args ...interface{}) {
 }
 
 func (r *Rapidito) initialize() {
-	r.RegisterGenerator(goginrestapi.NewGoGinRestApiGenerator(r.GolangManager))
+	r.RegisterGenerator(goginrestapi.NewGoGinRestApiGenerator(r.GolangManager, r.SqlManager))
 }
 
 func NewRapidito() *Rapidito {
 	log := logger.NewLogger()
 	errorHandler := errorhandler.NewErrorHandler(log)
 	golangManager := golang.NewGolangManager(log, errorHandler)
+	sqlManager := sql.NewSqlManager()
 
 	rapidito := &Rapidito{
 		ErrorHandler:   errorHandler,
@@ -169,6 +172,7 @@ func NewRapidito() *Rapidito {
 		Logger:         log,
 		Generators:     make(map[string]generator.Generator),
 		GolangManager:  golangManager,
+		SqlManager:     sqlManager,
 	}
 
 	rapidito.initialize()

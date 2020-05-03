@@ -3,6 +3,7 @@ package goginrestapi
 import (
 	"fmt"
 	helper2 "github.com/comfortablynumb/rapidito/helper"
+	"github.com/comfortablynumb/rapidito/language/sql"
 
 	"github.com/comfortablynumb/rapidito/generator"
 	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi/templates"
@@ -16,6 +17,7 @@ const (
 
 type goGinRestApiGenerator struct {
 	golangManager *golang.GolangManager
+	sqlManager    *sql.SqlManager
 }
 
 func (r *goGinRestApiGenerator) Generate(
@@ -297,9 +299,10 @@ func (r *goGinRestApiGenerator) GetName() string {
 
 // Static functions
 
-func NewGoGinRestApiGenerator(golangManager *golang.GolangManager) generator.Generator {
+func NewGoGinRestApiGenerator(golangManager *golang.GolangManager, sqlManager *sql.SqlManager) generator.Generator {
 	return &goGinRestApiGenerator{
 		golangManager: golangManager,
+		sqlManager:    sqlManager,
 	}
 }
 
