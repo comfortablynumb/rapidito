@@ -10,7 +10,9 @@ import (
 	"github.com/comfortablynumb/rapidito/configuration"
 	"github.com/comfortablynumb/rapidito/errorhandler"
 	"github.com/comfortablynumb/rapidito/generator"
+	"github.com/comfortablynumb/rapidito/generator/types/goginrestapi"
 	"github.com/comfortablynumb/rapidito/helper"
+	"github.com/comfortablynumb/rapidito/language/golang"
 	"github.com/comfortablynumb/rapidito/logger"
 )
 
@@ -21,6 +23,7 @@ type Rapidito struct {
 	TemplateHelper *helper.TemplateHelper
 	Logger         *logger.Logger
 	Generators     map[string]generator.Generator
+	GolangManager  *golang.GolangManager
 }
 
 func (r *Rapidito) Generate(configFile string) error {
@@ -150,15 +153,25 @@ func (r *Rapidito) HandleIfError(err error, msg string, args ...interface{}) {
 	r.ErrorHandler.HandleIfError(err, msg, args...)
 }
 
+func (r *Rapidito) initialize() {
+	r.RegisterGenerator(goginrestapi.NewGoGinRestApiGenerator(r.GolangManager))
+}
+
 func NewRapidito() *Rapidito {
 	log := logger.NewLogger()
 	errorHandler := errorhandler.NewErrorHandler(log)
+	golangManager := golang.NewGolangManager(log, errorHandler)
 
-	return &Rapidito{
+	rapidito := &Rapidito{
 		ErrorHandler:   errorHandler,
 		FileHelper:     helper.NewFileHelper(errorHandler),
 		TemplateHelper: helper.NewTemplateHelper(errorHandler),
 		Logger:         log,
 		Generators:     make(map[string]generator.Generator),
+		GolangManager:  golangManager,
 	}
+
+	rapidito.initialize()
+
+	return rapidito
 }

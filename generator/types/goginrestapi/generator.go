@@ -15,6 +15,7 @@ const (
 )
 
 type goGinRestApiGenerator struct {
+	golangManager *golang.GolangManager
 }
 
 func (r *goGinRestApiGenerator) Generate(
@@ -259,7 +260,7 @@ func (r *goGinRestApiGenerator) generateApiModules(
 	for _, model := range models {
 		// Model
 
-		golangModel := golang.NewGolangModelFromModel(model)
+		golangModel := r.golangManager.NewGolangModelFromModel(model)
 
 		fileCollection.AddFile(
 			fmt.Sprintf("internal/model/%s.go", golangModel.Filename),
@@ -271,7 +272,7 @@ func (r *goGinRestApiGenerator) generateApiModules(
 
 		// Resources
 
-		golangResourceCollection := golang.NewGolangResourceCollectionFromGolangModel(golangModel)
+		golangResourceCollection := r.golangManager.NewGolangResourceCollectionFromGolangModel(golangModel)
 		golangResourceFile := golang.NewGolangResourceFile(golangResourceCollection)
 
 		templateData := helper2.TemplateData{
@@ -296,8 +297,10 @@ func (r *goGinRestApiGenerator) GetName() string {
 
 // Static functions
 
-func NewGoGinRestApiGenerator() generator.Generator {
-	return &goGinRestApiGenerator{}
+func NewGoGinRestApiGenerator(golangManager *golang.GolangManager) generator.Generator {
+	return &goGinRestApiGenerator{
+		golangManager: golangManager,
+	}
 }
 
 func formatGoCode(filename string, contents string) (string, error) {
